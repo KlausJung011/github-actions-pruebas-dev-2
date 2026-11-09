@@ -1,0 +1,35 @@
+name: Pruebas del backend en dev
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Build y seis pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Compilar backend
+        run: npm run build
+      - name: Pruebas unitarias (2)
+        run: npm run test:unit
+      - name: Pruebas de integración (2)
+        run: npm run test:integration
+      - name: Pruebas E2E (2)
+        run: npm run test:e2e
